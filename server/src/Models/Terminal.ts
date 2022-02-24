@@ -11,7 +11,7 @@ export class Terminal extends BaseEntity{
     name:string
 
     @Column()
-    number:number
+    number:string
 
     @Column()
     active:boolean
