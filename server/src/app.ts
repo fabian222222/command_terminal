@@ -15,6 +15,7 @@ import {ProductHasIngredient} from './Models/ProductHasIngredient'
 import ProductsRoute from './Routes/ProductsRoute'
 import UsersRoute from './Routes/UsersRoute'
 import TerminalsRoute from './Routes/TerminalsRoute'
+import IngredientRoute from './Routes/IngredientRoute'
 
 // create the connection to the database
 createConnection({
@@ -45,6 +46,7 @@ app.use(bodyParser.json())
 app.use(ProductsRoute)
 app.use(UsersRoute)
 app.use(TerminalsRoute)
+app.use(IngredientRoute)
 
 // initialize routes
 
