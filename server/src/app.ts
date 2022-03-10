@@ -16,6 +16,7 @@ import ProductsRoute from './Routes/ProductsRoute'
 import UsersRoute from './Routes/UsersRoute'
 import TerminalsRoute from './Routes/TerminalsRoute'
 import IngredientRoute from './Routes/IngredientRoute'
+import CompanyRoute from './Routes/CompanyRoute'
 
 // create the connection to the database
 createConnection({
@@ -47,6 +48,7 @@ app.use(ProductsRoute)
 app.use(UsersRoute)
 app.use(TerminalsRoute)
 app.use(IngredientRoute)
+app.use(CompanyRoute)
 
 // initialize routes
 

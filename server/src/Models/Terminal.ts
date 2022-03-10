@@ -19,7 +19,9 @@ export class Terminal extends BaseEntity{
     @Column('timestamp')
     createdAt:Date
 
-    @ManyToOne(()=>Company, company => company.terminals)
+    @ManyToOne(()=>Company, company => company.terminals, {
+        onDelete : "SET NULL"
+    })
     compagny: Company
 
 }
