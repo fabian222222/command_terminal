@@ -103,37 +103,48 @@ router.put("/ingredients/:id", IngredientUpdateForm, async (
 ) => {
 
     const ingredientId = parseInt(req.params.id)
+    const ingredientFormErrors = validationResult(req)
 
-    if (ingredientId) {
+    if (!ingredientFormErrors.isEmpty()){
+        res.json({
+            status : 400,
+            message : "Data are not correct",
+            details : ingredientFormErrors
+        })
+    } else {
 
-        const ingredient = await Ingredient.findOne(ingredientId)
-        
-        if (ingredient) {
+        if (ingredientId) {
 
-            const changes = req.body
+            const ingredient = await Ingredient.findOne(ingredientId)
             
-            await Ingredient.update(ingredientId, changes)
-            const ingredientAfterUpdate = await Ingredient.findOne(ingredientId)
+            if (ingredient) {
 
-            res.json({
-                status : 200,
-                message : "Ingredient updated success",
-                ingredient : ingredientAfterUpdate
-            })
+                const changes = req.body
+                
+                await Ingredient.update(ingredientId, changes)
+                const ingredientAfterUpdate = await Ingredient.findOne(ingredientId)
+
+                res.json({
+                    status : 200,
+                    message : "Ingredient updated success",
+                    ingredient : ingredientAfterUpdate
+                })
+
+            } else {
+                res.json({
+                    status : 400,
+                    message : "This product does not exist"
+                })
+            }
 
         } else {
             res.json({
-                status : 400,
-                message : "This product does not exist"
+                status : 400, 
+                message: "The id given is not of type integer"
             })
         }
-
-    } else {
-        res.json({
-            status : 400, 
-            message: "The id given is not of type integer"
-        })
     }
+
 })
 
 export default router
