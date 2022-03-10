@@ -10,6 +10,7 @@ import {Company} from './Models/Company'
 import {Command} from './Models/Command'
 import {Ingredient} from './Models/Ingredient'
 import {ProductHasIngredient} from './Models/ProductHasIngredient'
+import {CommandHasProduct} from './Models/CommandHasProduct'
 
 // import all the route we are using
 import ProductsRoute from './Routes/ProductsRoute'
@@ -17,6 +18,7 @@ import UsersRoute from './Routes/UsersRoute'
 import TerminalsRoute from './Routes/TerminalsRoute'
 import IngredientRoute from './Routes/IngredientRoute'
 import CompanyRoute from './Routes/CompanyRoute'
+import CommandRoute from './Routes/CommandRoute'
 
 // create the connection to the database
 createConnection({
@@ -33,7 +35,8 @@ createConnection({
         Company,
         Command,
         Ingredient,
-        ProductHasIngredient
+        ProductHasIngredient,
+        CommandHasProduct
     ],
     synchronize: true,
     logging: false
@@ -49,6 +52,7 @@ app.use(UsersRoute)
 app.use(TerminalsRoute)
 app.use(IngredientRoute)
 app.use(CompanyRoute)
+app.use(CommandRoute)
 
 // initialize routes
 
