@@ -12,5 +12,5 @@ export class ProductHasIngredient extends BaseEntity{
     product:Product
 
     @ManyToOne(()=>Ingredient, ingredient=>ingredient.productHasIngredient)
-    ingredient:Ingredient
+    ingredient:Ingredient[]
 }

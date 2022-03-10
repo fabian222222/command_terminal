@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany,PrimaryGeneratedColumn } from 'typeorm'
 import { User } from './User'
+import { CommandHasProduct } from './CommandHasProduct'
 
 @Entity()
 export class Command extends BaseEntity{
@@ -16,4 +17,6 @@ export class Command extends BaseEntity{
     @ManyToOne(()=>User, user => user.commands, {nullable:true})
     user:User
 
+    @OneToMany(()=>CommandHasProduct, productHasIngredient=>productHasIngredient.command)
+    commandHasProduct:CommandHasProduct[]
 }
