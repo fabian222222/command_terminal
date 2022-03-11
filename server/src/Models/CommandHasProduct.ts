@@ -11,6 +11,6 @@ export class CommandHasProduct extends BaseEntity{
     @ManyToOne(()=>Product, product => product.commandHasProduct)
     product:Product
 
-    @ManyToOne(()=>Command, command=>command.commandHasProduct)
+    @ManyToOne(()=>Command, command=>command.products)
     command:Command
 }

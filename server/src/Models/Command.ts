@@ -14,9 +14,12 @@ export class Command extends BaseEntity{
     @Column()
     amount:number
 
+    @Column()
+    custom:boolean
+
     @ManyToOne(()=>User, user => user.commands, {nullable:true})
     user:User
 
     @OneToMany(()=>CommandHasProduct, productHasIngredient=>productHasIngredient.command)
-    commandHasProduct:CommandHasProduct[]
+    products:CommandHasProduct[]
 }
