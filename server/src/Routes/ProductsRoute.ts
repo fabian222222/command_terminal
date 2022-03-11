@@ -28,7 +28,6 @@ router.post("/products", ProductForm ,async (
         let product = new Product()
         product.name = productData.name
         product.price = productData.price
-        product.custome = productData.custome
 
         const createProduct = await Product.save(product)
 
