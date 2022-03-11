@@ -7,5 +7,7 @@ export const ProductForm = [
     body("price")
         .isNumeric().withMessage("This field need to be a int"),
     body("custome")
-        .isBoolean().withMessage("This field need to be a boolean")
+        .isBoolean().withMessage("This field need to be a boolean"),
+    body("ingredients")
+        .isArray().withMessage("This field need to be an array of ingredients")
 ]
