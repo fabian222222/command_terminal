@@ -2,6 +2,8 @@ import { Product } from "../Models/Product";
 import express from "express";
 import { ProductForm } from "../FormValidators/ProductForm";
 import { validationResult } from "express-validator";
+import { ProductHasIngredient } from "../Models/ProductHasIngredient";
+import { Ingredient } from "../Models/Ingredient";
 
 const router = express.Router()
 
@@ -21,14 +23,33 @@ router.post("/products", ProductForm ,async (
     } else {
 
         const productData = req.body
+        const ingredients = req.body.ingredients
+        
         let product = new Product()
-        product = productData
+        product.name = productData.name
+        product.price = productData.price
+        product.custome = productData.custome
 
-        const result = await Product.save(product)
+        const createProduct = await Product.save(product)
+
+        ingredients.map( async (ingredient:Ingredient) => {
+
+            const productHasIngredient = new ProductHasIngredient()
+            const ingredientChecker = await Ingredient.findOne(ingredient.id)
+
+            productHasIngredient.product = product
+            productHasIngredient.ingredient = ingredientChecker
+
+            await ProductHasIngredient.save(productHasIngredient)
+
+        })
 
         res.json({
             status : 200,
-            response : result
+            response : {
+                "product" : createProduct,
+                "ingredients" : ingredients
+            }
         })
 
     }
