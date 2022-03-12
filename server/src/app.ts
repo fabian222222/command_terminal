@@ -2,7 +2,6 @@ import {createConnection} from "typeorm"
 import express from 'express'
 import * as bodyParser from 'body-parser'
 
-// import all model that we need to create
 import {User} from './Models/User'
 import {Terminal} from './Models/Terminal'
 import {Product} from './Models/Product'
@@ -12,7 +11,6 @@ import {Ingredient} from './Models/Ingredient'
 import {ProductHasIngredient} from './Models/ProductHasIngredient'
 import {CommandHasProduct} from './Models/CommandHasProduct'
 
-// import all the route we are using
 import ProductsRoute from './Routes/ProductsRoute'
 import UsersRoute from './Routes/UsersRoute'
 import TerminalsRoute from './Routes/TerminalsRoute'
@@ -20,10 +18,10 @@ import IngredientRoute from './Routes/IngredientRoute'
 import CompanyRoute from './Routes/CompanyRoute'
 import CommandRoute from './Routes/CommandRoute'
 
-// jwt express token
 import token from "./token"
 
-// create the connection to the database
+import { Server } from 'socket.io'
+
 createConnection({
     type: "mysql",
     host: "localhost",
@@ -53,9 +51,17 @@ declare global {
     }
 }
 
-// initialize express and jwt
 const jwtExpress = require("express-jwt")
 const app = express()
+const http = require("http")
+const server = http.createServer(app)
+const io = new Server(server, {
+    cors : {
+        origin : "*",
+        methods : ["GET", "POST"]
+    }
+})
+
 app.use(bodyParser.json())
 app.use(jwtExpress({
     secret : token,
@@ -75,7 +81,6 @@ app.use( async (req,res,next) => {
     }
 })
 
-// add route to our app
 app.use(ProductsRoute)
 app.use(UsersRoute)
 app.use(TerminalsRoute)
@@ -83,6 +88,8 @@ app.use(IngredientRoute)
 app.use(CompanyRoute)
 app.use(CommandRoute)
 
-// initialize routes
+io.on("connection", (socket) => {
+    console.log(socket.id);
+})
 
-app.listen(3000)
+server.listen(3000)
