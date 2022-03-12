@@ -5,6 +5,8 @@ import { UserForm } from "../FormValidators/User/UserForm";
 import { validationResult } from "express-validator";
 import { UserUpdateForm } from "../FormValidators/User/UserUpdateForm"
 import { sign } from 'crypto';
+import * as jwt from "jsonwebtoken"
+import tokenKey from "./../token"
 
 const router = express.Router()
 
@@ -58,11 +60,11 @@ router.get("/auth", async(req, res) => {
     })
 
     if (user) {
-        // const token = jwt.sign({user}, tokenKey)
+        const token = jwt.sign({user}, tokenKey)
         res.json({
             status : 200,
-            result : user
-            // token : token
+            result : user,
+            token : token
         })
     } else {
         res.json({

@@ -61,7 +61,7 @@ app.use(jwtExpress({
     secret : token,
     algorithms : ["HS256"]
 }).unless({
-    path : ["/token", "/auth", "/register"]
+    path : ["/token", "/auth", "/users"]
 }))
 
 app.use( async (req,res,next) => {
