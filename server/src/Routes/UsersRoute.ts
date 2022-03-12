@@ -4,7 +4,6 @@ import express from "express";
 import { UserForm } from "../FormValidators/User/UserForm";
 import { validationResult } from "express-validator";
 import { UserUpdateForm } from "../FormValidators/User/UserUpdateForm"
-import { sign } from 'crypto';
 import * as jwt from "jsonwebtoken"
 import tokenKey from "./../token"
 
@@ -27,22 +26,38 @@ router.post("/users", UserForm ,async (
 
     } else {
 
-        const passwordHashed = sha512.sha512(req.body.password)
-        const userDataUnhashed = req.body
-        const date = new Date()
-        const userDataHashed = {...userDataUnhashed, password:passwordHashed, createdAt:date, role : "user"}
+        const userData = req.body
 
-        let user = new User()
-        user = userDataHashed
-
-        const result = await User.save(user)
-
-        res.json({
-            status : 200,
-            message: "User created",
-            result : result
+        const userIsExist = await User.find({
+            where : {
+                mail : userData.mail
+            }
         })
 
+        if (userIsExist) {
+            res.json({
+                status : 400,
+                message : "This user already exist"
+            })
+        } else {
+
+            const passwordHashed = sha512.sha512(req.body.password)
+            const userDataUnhashed = req.body
+            const date = new Date()
+            const userDataHashed = {...userDataUnhashed, password:passwordHashed, createdAt:date, role : "user"}
+    
+            let user = new User()
+            user = userDataHashed
+    
+            const result = await User.save(user)
+    
+            res.json({
+                status : 200,
+                message: "User created",
+                result : result
+            })
+
+        }
     }
 
 })
