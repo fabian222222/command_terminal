@@ -20,6 +20,9 @@ import IngredientRoute from './Routes/IngredientRoute'
 import CompanyRoute from './Routes/CompanyRoute'
 import CommandRoute from './Routes/CommandRoute'
 
+// jwt express token
+import token from "./token"
+
 // create the connection to the database
 createConnection({
     type: "mysql",
@@ -42,9 +45,35 @@ createConnection({
     logging: false
 })
 
-// initialize express
+declare global {
+    namespace Express{
+        interface Request{
+            user:User
+        }
+    }
+}
+
+// initialize express and jwt
+const jwtExpress = require("express-jwt")
 const app = express()
 app.use(bodyParser.json())
+app.use(jwtExpress({
+    secret : token,
+    algorithms : ["HS256"]
+}).unless({
+    path : ["/token", "/auth", "/register"]
+}))
+
+app.use( async (req,res,next) => {
+    if (req.user){
+        req.user = await User.findOne({
+            where : {id : req.user.id}
+        })
+        next()
+    } else {
+        next()
+    }
+})
 
 // add route to our app
 app.use(ProductsRoute)
