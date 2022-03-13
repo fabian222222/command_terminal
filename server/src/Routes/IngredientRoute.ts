@@ -35,6 +35,20 @@ router.post("/ingredients",IngredientForm, async (
     }
 })
 
+router.get("/ingredients", async (
+    req:express.Request,
+    res:express.Response
+) => {
+
+    const ingredients = await Ingredient.find() 
+
+    res.json({
+        status : 200,
+        ingredients : ingredients
+    })
+
+})
+
 router.get("/ingredients/:id", async (
     req:express.Request,
     res:express.Response

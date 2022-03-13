@@ -55,6 +55,20 @@ router.post("/products", ProductForm ,async (
 
 })
 
+router.get("products", async (
+    req:express.Request,
+    res:express.Response
+) => {
+
+    const products = await Product.find()
+
+    res.json({
+        status : 200,
+        products : products
+    })
+
+})
+
 router.get("/products", async (req, res) => {
 
     const products = await Product.find()

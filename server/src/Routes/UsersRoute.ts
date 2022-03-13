@@ -62,6 +62,20 @@ router.post("/users", UserForm ,async (
 
 })
 
+router.get("/users", async (
+    req:express.Request,
+    res:express.Response
+) => {
+
+    const users = await User.find()
+
+    res.json({
+        status : 200,
+        users : users
+    })
+
+})
+
 router.get("/auth", async(req, res) => {
 
     const passwordHashed = sha512.sha512(req.body.password)

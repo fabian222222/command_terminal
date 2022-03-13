@@ -40,6 +40,20 @@ router.post("/terminals", TerminalForm ,async(req, res) => {
 
 })
 
+router.get("terminals", async(
+    req:express.Request,
+    res:express.Response
+) => {
+
+    const terminals = await Terminal.find() 
+
+    res.json({
+        status : 200,
+        terminals : terminals
+    })
+
+})
+
 router.get("/terminals/:id", async (req,res) => {
 
     const terminalId = req.params.id

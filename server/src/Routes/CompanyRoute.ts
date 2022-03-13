@@ -40,6 +40,20 @@ router.post("/companies", CompanyForm ,async(
 
 })
 
+router.get("/companie", async (
+    req:express.Request,
+    res:express.Response
+) => {
+    
+    const companies = await Company.find()
+
+    res.json({
+        status : 200,
+        companies : companies
+    })
+
+})
+
 router.get("/companies/:id", async (
     req:express.Request,
     res:express.Response

@@ -70,6 +70,20 @@ router.post("/commands", CommandForm, async(
 
 })
 
+router.get("commands", async (
+    req:express.Request,
+    res:express.Response
+) =>{
+
+    const commands = await Command.find()
+
+    res.json({
+        status : 200,
+        commands : commands
+    })
+
+})
+
 router.get("/commands/:id", async(
     req:express.Request,
     res:express.Response
