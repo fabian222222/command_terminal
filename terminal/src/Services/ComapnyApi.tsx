@@ -1,6 +1,6 @@
 import { Company } from "../Interfaces/Company";
 
-const baseUrl = "http://localhost:3000/"
+const baseUrl = "http://localhost:3000"
 
 export const createCompany = async (company:Company) => {
 

@@ -1,6 +1,6 @@
 import { Ingredient } from "../Interfaces/Ingredient";
 
-const baseUrl = "http://localhost:3000/"
+const baseUrl = "http://localhost:8000"
 
 export const createIngredient = async (ingredient:Ingredient) => {
 
@@ -37,7 +37,7 @@ export const getIngredients = async () => {
             }
         })
     
-        const json:Ingredient[] = await response.json()
+        const json = await response.json()
         return json
 
     } catch (error) {

@@ -1,7 +1,7 @@
 import { Command } from "../Interfaces/Command";
 import { Product } from "../Interfaces/Product";
 
-const baseUrl = "http://localhost:3000/"
+const baseUrl = "http://localhost:8000"
 
 export const createCommand = async (product:Product[]) => {
 
@@ -32,6 +32,28 @@ export const getCommands = async () => {
     try {
      
         const response = await fetch(`${baseUrl}/commands`, {
+            method:"GET",
+            headers:{
+                "Authorization":`Bearer ${localStorage.getItem("token")}`
+            }
+        })
+    
+        const json = await response.json()
+        return json
+
+    } catch (error) {
+        
+        return error
+
+    }
+
+}
+
+export const getCommandsStatus = async (status:"preparation"|"termine") => {
+
+    try {
+     
+        const response = await fetch(`${baseUrl}/commands/${status}`, {
             method:"GET",
             headers:{
                 "Authorization":`Bearer ${localStorage.getItem("token")}`
@@ -82,6 +104,26 @@ export const changeCommand = async (commandId:number, changes:Command) => {
                 "Authorization":`Bearer ${localStorage.getItem("token")}`
             },
             body : JSON.stringify(changes)
+        })
+
+        const json:Command = await response.json()
+        return json
+
+    } catch (error) {
+        return error    
+    }
+
+}
+
+export const finishCommand = async (commandId:number) => {
+
+    try {
+
+        const response = await fetch(`${baseUrl}/commands/${commandId}/finish`, {
+            method:"PUT",
+            headers:{
+                "Authorization":`Bearer ${localStorage.getItem("token")}`
+            }
         })
 
         const json:Command = await response.json()

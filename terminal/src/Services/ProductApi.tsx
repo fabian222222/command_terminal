@@ -1,6 +1,6 @@
 import { Product } from "../Interfaces/Product";
 
-const baseUrl = "http://localhost:3000/"
+const baseUrl = "http://localhost:8000"
 
 export const createProduct = async (product:Product) => {
 
@@ -28,23 +28,16 @@ export const createProduct = async (product:Product) => {
 
 export const getProducts = async () => {
 
-    try {
-     
-        const response = await fetch(`${baseUrl}/products`, {
-            method:"GET",
-            headers:{
-                "Authorization":`Bearer ${localStorage.getItem("token")}`
-            }
-        })
-    
-        const json:Product[] = await response.json()
-        return json
+    const response = await fetch(`${baseUrl}/products`, {
+        method:"GET",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${localStorage.getItem("token")}`
+        }
+    })
 
-    } catch (error) {
-        
-        return error
-
-    }
+    const json = await response.json()
+    return json
 
 }
 
