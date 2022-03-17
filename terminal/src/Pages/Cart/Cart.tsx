@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react"
-import { Ingredient } from "../../Interfaces/Ingredient"
-import { Product } from "../../Interfaces/Product"
+import CommandSingle from "../../Components/Client/CommandSingle"
 import { CartContext } from "../../Providers/Cart/CartProvider"
+import { createCommand } from "../../Services/CommandApi"
 
 interface Props {
     children : JSX.Element
@@ -10,6 +10,8 @@ interface Props {
 const Cart = (props:Props) => {
 
     const {cart, setCart} = useContext(CartContext)
+
+    const [popUp, setPopUp] = useState(false)
     
     const removeProduct = (product:any) => {
         const remove = cart.filter((productRemove:any) => {
@@ -44,12 +46,17 @@ const Cart = (props:Props) => {
         setCart(remove)
     }
 
+    const order = async () => {
+        const command = await createCommand(cart)
+        console.log(command);
+    }
+
     return (
         <>
             <div>
                 {
                     cart.map((product:any) => {
-                        console.log(product);
+                        
                         return(
                             <div>
                                 <div key={product.product.id}>
@@ -68,23 +75,21 @@ const Cart = (props:Props) => {
                                         })
                                     }
                                 </div>
-                                <button onClick={() => {
-                                    removeProduct(product)
-                                }}>remove this product</button>
-                                <button
-                                onClick={() => {
-                                    addOne(product)
-                                }}>add one</button>
-                                <button
-                                onClick={() => {
-                                    removeOne(product)
-                                }}>remove one</button>
+                                <button onClick={() => {removeProduct(product)}}>remove this product</button>
+                                <button onClick={() => { addOne(product) }}>add one</button>
+                                <button onClick={() => { removeOne(product) }}>remove one</button>
+                                <button onClick={() => { setPopUp(true) }}>change ingredient</button>
+                                {
+                                    popUp && <CommandSingle product={product.product} deactivate={()=>{setPopUp(false)}} action={"changeIngredient"} />
+                                }
                             </div>
                         )
                     })
                 }
                 <div>
-                    <button>
+                    <button onClick={() => {
+                        order()
+                    }}>
                         commander
                     </button>
                 </div>

@@ -13,7 +13,9 @@ export const createCommand = async (product:Product[]) => {
                 "Content-Type":"application/json",
                 "Authorization":`Bearer ${localStorage.getItem("token")}`
             },
-            body : JSON.stringify(product)
+            body : JSON.stringify({
+                products:product
+            })
         })
     
         const json = await response.json()

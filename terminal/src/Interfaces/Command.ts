@@ -6,6 +6,7 @@ export interface Command {
     status:string,
     amount:number,
     custom:boolean,
+    date:Date,
     user?:User,
     products:Product[]
 }

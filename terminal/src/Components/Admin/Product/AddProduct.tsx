@@ -1,33 +1,39 @@
 import { useForm } from "react-hook-form";
-import { createProduct } from '../../../Services/ProductApi';
-import { getIngredients } from "../../../Services/IngredientApi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { IngredientContext } from "../../../Providers/Ingredients/IngredientProvider";
 import { Ingredient } from "../../../Interfaces/Ingredient";
+import { createProduct } from "../../../Services/ProductApi";
 
 interface IngredientWithId extends Ingredient{
     id:number
 }
-// ajouter les ingrédients dans l'envoie de produit pour créer
+
 const AddProduct = () => {
 
     const {register, handleSubmit} = useForm()
 
-    const [ingredients, setIngredients] = useState([])
+    const {ingredients} = useContext(IngredientContext)
 
-    const ingredientsAction = async () => {
-        const ingredientsApi = await getIngredients()
-        setIngredients(ingredientsApi.ingredients)
-    }
-
-    useEffect(() => {
-        ingredientsAction()
-    }, [])
-    
     return (
         <div>
              <form onSubmit={handleSubmit(async(form) =>{
                     console.log(form, "this is the form");
-                    // await createProduct({name:form.name, price:form.price, custom:form.custom, ingredients:form.ingredients})
+
+                    const ingredientsId = form.ingredients
+                    const ingredientsToAdd = ingredientsId.map((ingredientId:string) => {
+                        const ingredientIdInt = parseInt(ingredientId)
+                        const ingredient = ingredients.filter((ingredient:any) => {
+                            if (ingredient.id === ingredientIdInt){
+                                return ingredient
+                            }
+                        })
+                        return {...ingredient}
+                    })
+
+                    form.ingredients = ingredientsToAdd
+
+                    const createIngredientAction = await createProduct({name:form.name, price:form.price, custom:false, productHasIngredient:form.ingredients})
+                    console.log(createIngredientAction);
                 })}>
                 <div>
                     <label htmlFor="name">name</label>
@@ -55,7 +61,7 @@ const AddProduct = () => {
                         return(
                             <div key={ingredient.id}>
                                 <label htmlFor={ingredient.name}>{ingredient.name}</label>
-                                <input id={ingredient.name} type="checkbox" value={index}  {...register("ingredients")} />
+                                <input id={ingredient.name} type="checkbox" value={ingredient.id}  {...register("ingredients")} />
                             </div>
                         )
                     })

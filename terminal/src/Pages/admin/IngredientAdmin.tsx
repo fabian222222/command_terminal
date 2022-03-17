@@ -13,6 +13,8 @@ interface IngredientWithId extends Ingredient {
 const IngredientAdmin = () => {
 
     const [ingredients, setIngredients] = useState([])
+    const [updatePopup, setUpdatePopup] = useState(false)
+    const [ingredient, setIngredient] = useState()
 
     const ingredientsApi = async () => {
         const ingredientsAction = await getIngredients()
@@ -22,6 +24,13 @@ const IngredientAdmin = () => {
     useEffect(() => {
         ingredientsApi()
     }, [])
+
+    useEffect(() => {
+        if (ingredient) {
+            setUpdatePopup(true)
+        }
+    }, [ingredient])
+    
     
     if (ingredients.length > 0){
 
@@ -30,12 +39,21 @@ const IngredientAdmin = () => {
 
                 {ingredients.map((ingredient:IngredientWithId) => {
                     return(
-                        <IngredientSingle key={ingredient.id} id={ingredient.id} name={ingredient.name} price={ingredient.price} quantity={ingredient.quantity} />
+                        <div>
+                            <IngredientSingle key={ingredient.id} id={ingredient.id} name={ingredient.name} price={ingredient.price} quantity={ingredient.quantity} />
+                            <button onClick={() => {
+                                setIngredient(ingredient)
+                            }}>
+                                Update this ingredient
+                            </button>
+                        </div>
                     )
                 })}
 
                 <AddIngredient />
-
+                {
+                updatePopup && <UpdateIngredient ingredient={ingredient} />
+                }
             </div>
         )
 

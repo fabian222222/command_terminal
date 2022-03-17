@@ -18,16 +18,13 @@ const ListCommandKitchen = () => {
 
     useEffect(() => {
         getCommandUndone()
-    }, [])
-    
-    useEffect(() => {
-        console.log(commands);
-    }, [commands])
-    
+    }, [])  
 
     return (
-        commands.map((command:CommandWithId) => {
-            return(<CommandSingleKitchen key={command.id} id={command.id} amount={command.amount} products={command.products} />)
+        commands.map((command:any) => {
+            if (command.date){
+                return(<CommandSingleKitchen key={command.id} id={command.id} amount={command.amount} products={command.products} date={command.date}  />)
+            } 
         })
     )
 }

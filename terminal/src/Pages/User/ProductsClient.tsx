@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from "react"
 import { IngredientContext } from "../../Providers/Ingredients/IngredientProvider"
 import { CartContext } from "../../Providers/Cart/CartProvider"
 import { getProducts } from "../../Services/ProductApi"
+import CommandSingle from "../../Components/Client/CommandSingle"
+import { Product } from "../../Interfaces/Product"
 
 const ProductsClient = () => {
 
@@ -10,6 +12,8 @@ const ProductsClient = () => {
     const [products, setProducts] = useState([])  
     const [productsAvailability, setProductsAvailability] = useState([])
     const [productLoading, setProductLoading] = useState(false)
+    const [popUp, setPopUp] = useState(false)
+    const [product, setProduct] = useState()
 
     const productAction = async () => {
         const productsApi = await getProducts()
@@ -72,36 +76,38 @@ const ProductsClient = () => {
     }
 
     useEffect(() => {
-        console.log(cart);
-    }, [cart])
-    
-    useEffect(() => {
         const availableProducts = productCheck()
         setProductsAvailability(availableProducts)
     }, [ingredients])
-
-    // useEffect(() => {
-    //     console.log(productsAvailability);
-    // }, [productsAvailability])
     
     if (productsAvailability.length > 0 && productLoading) {
         return (
-            productsAvailability.map((product:any) => {
-                if (product.available === true) {
-                    return (
-                        <div key={product.id}>
-                            true
-                            <button onClick={() => { cartChecker(product) }}>Add to basket</button>
-                        </div>
-                    )
-                }else {
-                    return (
-                        <div key={product.id}>
-                            false
-                        </div>
-                    )
+            <div>
+                {productsAvailability.map((product:any) => {
+                    if (product.available === true) {
+                        return (
+                            <div key={product.id}>
+                                true
+                                <button onClick={() => { cartChecker(product) }}>Add to basket</button>
+                                <button onClick={() => {
+                                    setProduct(product) 
+                                    setPopUp(true)
+                                }}>Change product</button>
+                                
+                            </div>
+                        )
+                    }else {
+                        return (
+                            <div key={product.id}>
+                                false
+                            </div>
+                        )
+                    }
+                })}
+                {
+                    popUp && <CommandSingle product={product} deactivate={()=>{setPopUp(false)}} action={"add"} />
                 }
-            })
+            </div>
         )
     } else {
         return(
