@@ -14,8 +14,8 @@ export class Command extends BaseEntity{
     @Column()
     amount:number
 
-    @Column()
-    custom:boolean
+    @Column({nullable:true})
+    date:Date
 
     @ManyToOne(()=>User, user => user.commands, {nullable:true})
     user:User

@@ -14,7 +14,10 @@ export class Product extends BaseEntity{
     @Column()
     price:number
 
-    @OneToMany(()=>ProductHasIngredient, productHasIngredient=>productHasIngredient.product)
+    @Column()
+    custom:boolean
+
+    @OneToMany(()=>ProductHasIngredient, productHasIngredient=>productHasIngredient.product, {onDelete:"CASCADE"})
     productHasIngredient:ProductHasIngredient[]
 
     @OneToMany(()=>CommandHasProduct, commandHasProduct=>commandHasProduct.product)

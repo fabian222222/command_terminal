@@ -30,25 +30,25 @@ router.post("/commands", CommandForm, async(
         const products = commandData.products
 
         const command = new Command()
-        command.custom = commandData.custom
         if (commandData.userId) {
             const user = await User.findOne(commandData.userId)
             command.user = user
         }
         const amountEachProduct = products.map((product:any) => {
-            return product.price * product.quantity
+            return product.product.price * product.quantity
         })
         const amountCommand = amountEachProduct.reduce((previousValue, currentValue) => {
             return previousValue + currentValue
         })
-        command.status = commandData.status
+        command.status = "preparation"
         command.amount = amountCommand
+        command.date = new Date()
 
         const createCommand = await Command.save(command)
 
         products.map( async (product:any) => {
-
-            const productChecker = await Product.findOne(product.id)
+            
+            const productChecker = await Product.findOne(product.product.id)
             if (productChecker) {
                 for(let i = 1; i <= product.quantity; i++){
                     const addProductToCommand = new CommandHasProduct()
@@ -58,7 +58,6 @@ router.post("/commands", CommandForm, async(
                     await CommandHasProduct.save(addProductToCommand)
                 }
             }
-
         })
 
         res.json({
@@ -70,18 +69,37 @@ router.post("/commands", CommandForm, async(
 
 })
 
-router.get("commands", async (
+router.get("/commands", async (
     req:express.Request,
     res:express.Response
 ) =>{
 
-    const commands = await Command.find()
+    const commands = await Command.find({
+        relations:["products", "products.product", "products.product.productHasIngredient", "products.product.productHasIngredient.ingredient"]
+    })
 
     res.json({
         status : 200,
         commands : commands
     })
 
+})
+
+router.get("/commands/:status", async (
+    req:express.Request,
+    res:express.Response
+) => {
+    const status = req.params.status
+
+    const commands = await Command.find({
+        where:{status : status},
+        relations:["products", "products.product", "products.product.productHasIngredient", "products.product.productHasIngredient.ingredient"]
+    })
+
+    res.json({
+        status : 200,
+        commands : commands
+    })
 })
 
 router.get("/commands/:id", async(
@@ -136,6 +154,49 @@ router.put("/commands/:id", async(
         if (command) {
 
             const changes = req.body
+
+            await Command.update(commandId, changes)
+            const commandAfterUpdate = await Command.findOne(commandId)
+
+            res.json({
+                status : 200,
+                command : commandAfterUpdate
+            })
+
+        } else {
+
+            res.json({
+                status : 400,
+                message : "This command does not exist"
+            })
+
+        }
+
+    } else {
+
+        res.json({
+            status : 400,
+            message : "The Id given is not of type integer"
+        })
+
+    }
+
+})
+
+router.put("/commands/:id/finish", async(
+    req:express.Request,
+    res:express.Response
+) =>{
+
+    const commandId = parseInt(req.params.id)
+
+    if (commandId) {
+
+        const command = await Command.findOne(commandId)
+
+        if (command) {
+
+            const changes = {...command, status:"delivered"}
 
             await Command.update(commandId, changes)
             const commandAfterUpdate = await Command.findOne(commandId)

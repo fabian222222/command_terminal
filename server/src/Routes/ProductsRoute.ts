@@ -23,11 +23,12 @@ router.post("/products", ProductForm ,async (
     } else {
 
         const productData = req.body
-        const ingredients = req.body.ingredients
+        const ingredients = req.body.productHasIngredient
         
         let product = new Product()
         product.name = productData.name
         product.price = productData.price
+        product.custom = productData.custom
 
         const createProduct = await Product.save(product)
 
@@ -55,39 +56,16 @@ router.post("/products", ProductForm ,async (
 
 })
 
-router.get("products", async (
-    req:express.Request,
-    res:express.Response
-) => {
+router.get("/products", async (req, res) => {
 
-    const products = await Product.find()
+    const products = await Product.find({
+        relations:["productHasIngredient", "productHasIngredient.ingredient"]
+    })
 
     res.json({
         status : 200,
         products : products
     })
-
-})
-
-router.get("/products", async (req, res) => {
-
-    const products = await Product.find()
-
-    if (products) {
-
-        res.json({
-            status : 200,
-            products : products
-        })
-
-    } else {
-
-        res.json({
-            status : 200,
-            products : "You don't have any product"
-        })
-
-    }
 
 })
 

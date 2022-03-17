@@ -8,9 +8,13 @@ export class ProductHasIngredient extends BaseEntity{
     @PrimaryGeneratedColumn()
     id:number
 
-    @ManyToOne(()=>Product, product => product.productHasIngredient)
+    @ManyToOne(()=>Product, product => product.productHasIngredient, {
+        onDelete:"CASCADE"
+    })
     product:Product
 
-    @ManyToOne(()=>Ingredient, ingredient=>ingredient.productHasIngredient)
+    @ManyToOne(()=>Ingredient, ingredient=>ingredient.productHasIngredient, {
+        onDelete : "SET NULL"
+    })
     ingredient:Ingredient
 }

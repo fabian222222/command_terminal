@@ -6,8 +6,8 @@ export const ProductForm = [
         .isLength({min:4}).withMessage("This field need to be longer than 4"),
     body("price")
         .isNumeric().withMessage("This field need to be a int"),
-    body("custome")
+    body("custom")
         .isBoolean().withMessage("This field need to be a boolean"),
-    body("ingredients")
+    body("productHasIngredient")
         .isArray().withMessage("This field need to be an array of ingredients")
 ]
